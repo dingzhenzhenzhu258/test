@@ -35,5 +35,11 @@ namespace BattlenetResources.Controls
                 UseShellExecute = true // 必须设置为 true 才能在 .NET Core/5+ 中生效
             });
         }
+
+        // 暴露一个公共属性，内部指向按钮的 Content
+        public Button LoginButton
+        {
+            get => this.RegisterButton;
+        }
     }
 }

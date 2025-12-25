@@ -346,6 +346,7 @@
 
             <ContentControl x:Name="ContentShow" Grid.Row="2">
                 <Image
+                    Name="rotatingImage"
                     Grid.Row="2"
                     Height="80"
                     HorizontalAlignment="Center"

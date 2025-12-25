@@ -1,4 +1,5 @@
 ﻿using BattlenetResources.Controls;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
@@ -36,7 +37,19 @@ namespace Battlenet
                 this.Dispatcher.Invoke(() =>
                 {
                     win.Height = 599;
-                    ContentShow.Content = new Register();
+                    // 1. 先切换内容
+                    Register regControl = new Register();
+                    ContentShow.Content = regControl;
+
+                    regControl.LoginButton.Click += (s, e) =>
+                    {
+                        var loginControl = new StackPanel();
+                        loginControl.HorizontalAlignment = HorizontalAlignment.Center;
+                        loginControl.VerticalAlignment = VerticalAlignment.Center;
+                        loginControl.Children.Add( rotatingImage);
+                        loginControl.Children.Add(new TextBlock() { Text= "正在登录..." ,Margin = new Thickness(0, 5, 0, 0) , Foreground= (Brush)new BrushConverter().ConvertFromString("#CDDADB")! });
+                        ContentShow.Content = loginControl;
+                    };
                 });
             }).Start();
         }
