@@ -78,7 +78,7 @@
         <TextBlock
             Margin="10,14,0,0"
             FontSize="17"
-            Foreground="White"
+            Foreground="#CDDADB"
             LineHeight="25"
             LineStackingStrategy="BlockLineHeight"
             TextAlignment="Center">
@@ -87,7 +87,10 @@
             <Run Text="录。如果您已进行关联或当前没有战网通行" />
             <LineBreak />
             <Run Text="证，请接受相应条款，然后" />
-            <Run FontWeight="Bold" Text="登录或注册" />
+            <Run
+                FontWeight="Bold"
+                Foreground="#D9DADB"
+                Text="登录或注册" />
             <Run Text="。" />
         </TextBlock>
 
@@ -102,12 +105,13 @@
                 Margin="10,3,10,0"
                 VerticalAlignment="Top" />
             <TextBlock
-                Width="300"
+                Width="250"
                 FontSize="13"
                 FontWeight="Bold"
-                Foreground="White"
+                Foreground="#BEBEC0"
                 LineHeight="22"
-                LineStackingStrategy="BlockLineHeight">
+                LineStackingStrategy="BlockLineHeight"
+                TextWrapping="Wrap">
                 <Run Text="您同意" />
                 <Hyperlink
                     Click="Hyperlink_Click"
@@ -120,21 +124,15 @@
                     Click="Hyperlink_Click"
                     Style="{StaticResource BlizzardLinkStyle}"
                     TextDecorations="None">
-                    <Run Text="网易暴" />
+                    <Run Text="网易暴雪游戏服务隐私政策" />
                 </Hyperlink>
                 <LineBreak />
-                <Hyperlink
-                    Click="Hyperlink_Click"
-                    Style="{StaticResource BlizzardLinkStyle}"
-                    TextDecorations="None">
-                    <Run Text="雪游戏服务隐私政策" />
-                </Hyperlink>
             </TextBlock>
         </StackPanel>
 
         <Button
             Width="300"
-            Height="35"
+            Height="40"
             Margin="0,30,0,30"
             Content="使用网易账号登录或注册"
             FontSize="15">
@@ -186,13 +184,13 @@
             Width="300"
             HorizontalAlignment="Center"
             FontSize="16"
-            Foreground="White"
+            Foreground="#CDDADB"
             TextWrapping="Wrap">
             <Run Text="如果您拥有战网通行证但尚未与网易账号进行关联，选择" />
-            <Run Text="" />
             <Run
                 FontSize="17"
                 FontWeight="Black"
+                Foreground="#D9DADB"
                 Text="关联您的账号" />
             <Run Text="以继续" />
             <Hyperlink

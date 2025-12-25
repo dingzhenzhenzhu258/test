@@ -71,6 +71,111 @@
             </Setter>
         </Style>
 
+        <Style TargetType="ListBox">
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border
+                                        x:Name="bg"
+                                        Margin="0,2,0,0"
+                                        Padding="5"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="2,0,0,0"
+                                        CornerRadius="2">
+                                        <ContentPresenter
+                                            x:Name="content"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            TextElement.FontSize="{TemplateBinding FontSize}"
+                                            TextElement.FontStyle="{TemplateBinding FontStyle}"
+                                            TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                            TextElement.Foreground="{TemplateBinding Foreground}" />
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="content" Property="TextElement.Foreground" Value="White" />
+                                            <Setter TargetName="bg" Property="Background" Value="#272930" />
+                                        </Trigger>
+
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="content" Property="TextElement.Foreground" Value="White" />
+                                            <Setter TargetName="bg" Property="Background" Value="#272930" />
+                                            <Setter TargetName="bg" Property="BorderBrush" Value="#148EFF" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border Name="Border">
+                            <ScrollViewer Margin="0" Focusable="false">
+                                <!--
+                                    在普通的 ControlTemplate 中，我们通常需要一个 ContentPresenter 来显示内容，但在列表控件（如 ListBox, ListView, ComboBox）中，秘密就在你代码里的这一行：
+                                    
+                                    IsItemsHost="True" —— 魔法的来源
+                                    在 ListBox 的模板中，StackPanel（或者其他布局面板）加上 IsItemsHost="True" 这个属性，就等同于告诉 WPF：“这里就是装子项目的篮子”。
+                                    
+                                    注意： IsItemsHost="True"  当你设置了 IsItemsHost="True"，WPF 的内部逻辑会自动完成以下几件事：
+                                    
+                                    接管容器：WPF 不再寻找 ContentPresenter，而是直接把 ListBox 里的所有 ListBoxItem 扔进这个设置了 IsItemsHost 的面板（这里是你的 StackPanel）中。
+                                    
+                                    生成集合：如果你绑定了 ItemsSource，WPF 会为每一个数据项生成一个 ListBoxItem，并把它们作为 Children 添加到这个 StackPanel 里。
+                                    
+                                    布局职责：这个 StackPanel 负责了内容的排列方式（垂直或水平）。
+                                -->
+                                <VirtualizingStackPanel Margin="2" IsItemsHost="True" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type GroupBox}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupBox}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <ContentPresenter
+                                Margin="4,4,4,2"
+                                HorizontalAlignment="Left"
+                                ContentSource="Header"
+                                RecognizesAccessKey="False"
+                                TextElement.FontSize="{TemplateBinding FontSize}"
+                                TextElement.FontStyle="{TemplateBinding FontStyle}"
+                                TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                TextElement.Foreground="{TemplateBinding Foreground}" />
+
+                            <Border
+                                Grid.Row="1"
+                                Margin="0,0,0,4"
+                                BorderBrush="#36383E"
+                                BorderThickness="0,0,0,1"
+                                CornerRadius="0">
+                                <ContentPresenter />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Border BorderBrush="#36383E" BorderThickness="1">
@@ -159,22 +264,82 @@
 
                 <Popup
                     Name="myPopup"
+                    Width="150"
                     AllowsTransparency="True"
+                    HorizontalOffset="-123"
                     IsOpen="{Binding IsChecked, ElementName=button, Mode=TwoWay}"
                     Placement="Bottom"
                     PlacementTarget="{Binding ElementName=button}"
                     PopupAnimation="Fade"
-                    StaysOpen="False">
+                    StaysOpen="False"
+                    VerticalOffset="5">
                     <Border
                         Background="#1A1C23"
                         BorderBrush="#36383E"
                         BorderThickness="1"
                         CornerRadius="3">
-                        <ListBox Background="#1A1C23">
-                            <TextBlock Text="aaa" />
-                            <TextBlock Text="aaa" />
-                            <TextBlock Text="aaa" />
-                        </ListBox>
+
+                        <StackPanel>
+
+                            <GroupBox
+                                Margin="5,10,0,0"
+                                FontSize="11"
+                                FontWeight="Bold"
+                                Foreground="#BFC0C2"
+                                Header="登录地区">
+                                <ListBox Background="#1A1C23" BorderThickness="0">
+
+                                    <ListBoxItem
+                                        Content="亚洲"
+                                        FontSize="13"
+                                        Foreground="#BFC0C2" />
+                                    <ListBoxItem
+                                        Content="欧美"
+                                        FontSize="13"
+                                        Foreground="#BFC0C2" />
+                                    <ListBoxItem
+                                        Content="中国"
+                                        FontSize="13"
+                                        Foreground="#BFC0C2" />
+                                </ListBox>
+                            </GroupBox>
+
+                            <GroupBox
+                                Margin="5,-5,0,0"
+                                FontSize="11"
+                                FontWeight="Bold"
+                                Foreground="#BFC0C2">
+                                <ListBox Background="#1A1C23" BorderThickness="0">
+
+                                    <ListBoxItem
+                                        Content="使用上一次的状态"
+                                        FontSize="13"
+                                        Foreground="#BFC0C2" />
+                                    <ListBoxItem
+                                        Content="隐身"
+                                        FontSize="13"
+                                        Foreground="#BFC0C2" />
+                                </ListBox>
+                            </GroupBox>
+
+                            <ListBox
+                                Margin="4,0,0,4"
+                                Background="#1A1C23"
+                                BorderThickness="0">
+
+                                <ListBoxItem
+                                    Content="设置"
+                                    FontSize="13"
+                                    Foreground="#BFC0C2" />
+                                <ListBoxItem
+                                    Content="离线模式"
+                                    FontSize="13"
+                                    Foreground="#BFC0C2" />
+                            </ListBox>
+                        </StackPanel>
+
+
+
                     </Border>
                 </Popup>
             </DockPanel>
