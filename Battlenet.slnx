@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Battlenet/Battlenet.csproj" />
+  <Project Path="BattlenetResources/BattlenetResources.csproj" Id="2f5d39ae-bfed-4b2c-9b82-fe0b1d32fcd7" />
+</Solution>
