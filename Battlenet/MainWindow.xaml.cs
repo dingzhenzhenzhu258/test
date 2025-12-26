@@ -34,14 +34,14 @@ namespace Battlenet
             await Task.Delay(1);
             new Thread(() => {
                 Thread.Sleep(3000); 
-                this.Dispatcher.Invoke(() =>
+                this.Dispatcher.Invoke(async () =>
                 {
                     win.Height = 599;
                     // 1. 先切换内容
                     Register regControl = new Register();
                     ContentShow.Content = regControl;
 
-                    regControl.LoginButton.Click += (s, e) =>
+                    regControl.LoginButton.Click += async (s, e) =>
                     {
                         var loginControl = new StackPanel();
                         loginControl.HorizontalAlignment = HorizontalAlignment.Center;
@@ -49,6 +49,11 @@ namespace Battlenet
                         loginControl.Children.Add( rotatingImage);
                         loginControl.Children.Add(new TextBlock() { Text= "正在登录..." ,Margin = new Thickness(0, 5, 0, 0) , Foreground= (Brush)new BrushConverter().ConvertFromString("#CDDADB")! });
                         ContentShow.Content = loginControl;
+
+                        // 模拟登录过程
+                        await Task.Delay(3000);
+                        // 登录成功后显示主界面
+                        ContentShow.Content = new Login();
                     };
                 });
             }).Start();
