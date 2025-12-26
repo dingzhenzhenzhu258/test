@@ -7,4 +7,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Images\ScreenShot_2025-12-26_163644_110.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\ScreenShot_2025-12-26_163644_110.png" />
+  </ItemGroup>
+
 </Project>
