@@ -158,6 +158,72 @@
                     StrokeThickness="1.5" />
             </Grid>
         </ControlTemplate>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <!--
+                            BulletDecorator：左右结构布局
+                            这是 WPF 专门用于处理“小图标 + 文字”布局的控件。
+                            Bullet 区域：放置那个 13x13 的方框。
+                            ContentPresenter：放置 CheckBox 的文字内容（如“记住密码”）。RecognizesAccessKey="True" 表示支持快捷键（比如文字里有 _A，按 Alt+A 就能选中）。
+                        -->
+                        <BulletDecorator Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <Border
+                                    x:Name="Border"
+                                    Width="15"
+                                    Height="15"
+                                    Margin="1.5,0,0,0"
+                                    Background="Transparent"
+                                    BorderBrush="White"
+                                    BorderThickness="1"
+                                    CornerRadius="2">
+                                    <Grid>
+                                        <Path
+                                            x:Name="CheckMark"
+                                            Width="12"
+                                            Height="10"
+                                            Data="M 1,5 L 4,8 L 11,1"
+                                            SnapsToDevicePixels="True"
+                                            Stroke="#6BD900"
+                                            StrokeThickness="2"
+                                            Visibility="Collapsed" />
+                                        <Path
+                                            x:Name="InderminateMark"
+                                            Width="10"
+                                            Height="2"
+                                            Data="M 0,1 L 10,1"
+                                            SnapsToDevicePixels="True"
+                                            Stroke="#6BD900"
+                                            StrokeThickness="2"
+                                            Visibility="Collapsed" />
+                                    </Grid>
+                                </Border>
+                            </BulletDecorator.Bullet>
+
+                            <ContentPresenter
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True"
+                                TextElement.Foreground="#D9DADB" />
+                        </BulletDecorator>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter TargetName="InderminateMark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True" />
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
 
@@ -171,8 +237,7 @@
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.3*" />
-                    <RowDefinition Height="0.6*" />
-                    <RowDefinition Height="0.3*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel>
                     <Border
@@ -417,6 +482,356 @@
                                                                 </Button>
                                                             </Grid>
                                                         </DockPanel>
+                                                    </Border>
+
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                                                        </Trigger>
+                                                        <Trigger SourceName="AccountInput" Property="IsKeyboardFocusWithin" Value="True">
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="#63AEE4" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <TextBox Margin="0,10">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                                        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                        <Setter Property="MinWidth" Value="120" />
+                                        <Setter Property="MinHeight" Value="20" />
+                                        <Setter Property="AllowDrop" Value="true" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                                                    <Border
+                                                        Name="Border"
+                                                        Padding="8"
+                                                        Background="Transparent"
+                                                        BorderBrush="#6B6C70"
+                                                        BorderThickness="1"
+                                                        CornerRadius="3">
+                                                        <!--
+                                                            在 TextBox 的模板中，必须有一个名为 PART_ContentHost 的元素（通常是 ScrollViewer 或 AdornerDecorator）。
+                                                            WPF 内部逻辑会自动找到这个名字，并将你输入的文字、光标渲染在这里
+                                                        -->
+                                                        <DockPanel>
+                                                            <Button
+                                                                BorderBrush="#3D91F7"
+                                                                Content="获取验证码"
+                                                                DockPanel.Dock="Right">
+                                                                <Button.Template>
+                                                                    <ControlTemplate TargetType="Button">
+                                                                        <Border Background="Transparent">
+                                                                            <ContentPresenter
+                                                                                x:Name="TextHolder"
+                                                                                HorizontalAlignment="Center"
+                                                                                VerticalAlignment="Center"
+                                                                                TextElement.Foreground="{TemplateBinding BorderBrush}" />
+                                                                        </Border>
+                                                                        <ControlTemplate.Triggers>
+                                                                            <EventTrigger RoutedEvent="Button.Click">
+                                                                                <EventTrigger.Actions>
+                                                                                    <BeginStoryboard>
+                                                                                        <Storyboard>
+                                                                                            <ColorAnimation
+                                                                                                Storyboard.TargetName="TextHolder"
+                                                                                                Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"
+                                                                                                To="#888888"
+                                                                                                Duration="0:0:0" />
+
+                                                                                            <ColorAnimation
+                                                                                                BeginTime="0:0:2"
+                                                                                                Storyboard.TargetName="TextHolder"
+                                                                                                Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"
+                                                                                                To="#3D91F7"
+                                                                                                Duration="0:0:0" />
+                                                                                        </Storyboard>
+                                                                                    </BeginStoryboard>
+                                                                                </EventTrigger.Actions>
+                                                                            </EventTrigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                            <Grid>
+                                                                <TextBox
+                                                                    x:Name="AccountInput"
+                                                                    Padding="5,0"
+                                                                    VerticalAlignment="Center"
+                                                                    VerticalContentAlignment="Center"
+                                                                    Background="Transparent"
+                                                                    BorderThickness="0"
+                                                                    CaretBrush="White"
+                                                                    FontSize="14"
+                                                                    FontWeight="Bold"
+                                                                    Foreground="White" />
+                                                                <TextBlock
+                                                                    Margin="10,0"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="#666666"
+                                                                    IsHitTestVisible="False"
+                                                                    Text="请输入短信验证码">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Text.Length, ElementName=AccountInput}" Value="0">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </Grid>
+
+                                                        </DockPanel>
+
+                                                    </Border>
+
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                                                        </Trigger>
+                                                        <Trigger SourceName="AccountInput" Property="IsKeyboardFocusWithin" Value="True">
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="#63AEE4" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <Button
+                                Name="RegisterButton"
+                                Height="40"
+                                Margin="0,10,0,10"
+                                Content="快捷登录"
+                                FontSize="15">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Background" Value="#0074E0" />
+                                        <Setter Property="Foreground" Value="White" />
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border
+                                                        x:Name="RootBorder"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="1"
+                                                        ClipToBounds="True"
+                                                        CornerRadius="5">
+
+                                                        <Grid>
+                                                            <Ellipse
+                                                                x:Name="RippleEffect"
+                                                                Width="10"
+                                                                Height="10"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Fill="#3D91F7"
+                                                                IsHitTestVisible="False"
+                                                                Opacity="0">
+                                                                <Ellipse.RenderTransform>
+                                                                    <ScaleTransform x:Name="RippleScale" CenterX="5" CenterY="5" ScaleX="0" ScaleY="0" />
+                                                                </Ellipse.RenderTransform>
+                                                            </Ellipse>
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Grid>
+                                                    </Border>
+
+                                                    <ControlTemplate.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter Property="BorderBrush" Value="#80CAFF" />
+                                                                <Setter Property="Background" Value="#0084FF" />
+                                                            </MultiDataTrigger.Setters>
+                                                        </MultiDataTrigger>
+                                                        <EventTrigger RoutedEvent="Button.Click">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="RippleScale"
+                                                                        Storyboard.TargetProperty="ScaleX"
+                                                                        From="0"
+                                                                        To="20"
+                                                                        Duration="0:0:0.6">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CircleEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="RippleScale"
+                                                                        Storyboard.TargetProperty="ScaleY"
+                                                                        From="0"
+                                                                        To="20"
+                                                                        Duration="0:0:0.6">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <CircleEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+
+                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="RippleEffect" Storyboard.TargetProperty="Opacity">
+                                                                        <DiscreteDoubleKeyFrame KeyTime="0" Value="0.9" />
+                                                                        <LinearDoubleKeyFrame KeyTime="0:0:0.8" Value="0" />
+                                                                    </DoubleAnimationUsingKeyFrames>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="30天免登录" />
+                                <TextBlock>
+                                    <Run Text=" |" />
+                                    <Hyperlink Foreground="#D9DADB" TextDecorations="None">
+                                        <Run Text="遇到问题？" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <CheckBox Margin="0,10,0,0">
+                                <TextBlock Foreground="#D9DADB" TextWrapping="Wrap">
+                                    <Run Text="我已详细阅读并同意" />
+                                    <Hyperlink TextDecorations="None">
+                                        <Run Foreground="#147FF1" Text="《网易游戏隐私政策》" />
+                                    </Hyperlink>
+                                    <Run Text="和" />
+                                    <Hyperlink TextDecorations="None">
+                                        <Run Foreground="#147FF1" Text="《网易游戏使用许可及服务协议》" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </CheckBox>
+
+                            <CheckBox Margin="0,10,0,0">
+                                <TextBlock
+                                    Foreground="#D9DADB"
+                                    Text="我同意网易向网之易传输我的实名信息(姓名、身份证号)及手机号码等账号信息，用于登录、注册或绑定战网账号。"
+                                    TextWrapping="Wrap" />
+                            </CheckBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <TabItem Header="注册">
+                        <StackPanel>
+                            <TextBox>
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="SnapsToDevicePixels" Value="True" />
+                                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                                        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                                        <Setter Property="MinWidth" Value="120" />
+                                        <Setter Property="MinHeight" Value="20" />
+                                        <Setter Property="AllowDrop" Value="true" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                                                    <Border
+                                                        Name="Border"
+                                                        Padding="6"
+                                                        Background="Transparent"
+                                                        BorderBrush="#6B6C70"
+                                                        BorderThickness="1"
+                                                        CornerRadius="3">
+                                                        <!--
+                                                            在 TextBox 的模板中，必须有一个名为 PART_ContentHost 的元素（通常是 ScrollViewer 或 AdornerDecorator）。
+                                                            WPF 内部逻辑会自动找到这个名字，并将你输入的文字、光标渲染在这里
+                                                        -->
+                                                        <Grid>
+                                                            <TextBox
+                                                                x:Name="AccountInput"
+                                                                Padding="5,0"
+                                                                VerticalAlignment="Center"
+                                                                VerticalContentAlignment="Center"
+                                                                Background="Transparent"
+                                                                BorderThickness="0"
+                                                                CaretBrush="White"
+                                                                FontSize="14"
+                                                                FontWeight="Bold"
+                                                                Foreground="White" />
+                                                            <TextBlock
+                                                                Margin="10,3,0,3"
+                                                                VerticalAlignment="Center"
+                                                                Foreground="#666666"
+                                                                IsHitTestVisible="False"
+                                                                Text="请输入邮箱">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Text.Length, ElementName=AccountInput}" Value="0">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+
+                                                            <Button
+                                                                Margin="0,0,8,0"
+                                                                HorizontalAlignment="Right"
+                                                                VerticalAlignment="Center"
+                                                                Cursor="Hand">
+                                                                <Button.Style>
+                                                                    <Style TargetType="Button">
+                                                                        <Setter Property="Background" Value="Transparent" />
+                                                                        <Setter Property="Template">
+                                                                            <Setter.Value>
+                                                                                <ControlTemplate TargetType="Button">
+                                                                                    <Border Background="Transparent">
+                                                                                        <TextBlock
+                                                                                            FontSize="18"
+                                                                                            Foreground="{TemplateBinding Foreground}"
+                                                                                            Text="×" />
+                                                                                    </Border>
+                                                                                </ControlTemplate>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                        <Setter Property="Foreground" Value="#999999" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Text.Length, ElementName=AccountInput}" Value="0">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Button.Style>
+
+                                                                <behaviors:Interaction.Triggers>
+                                                                    <behaviors:EventTrigger EventName="Click">
+                                                                        <!--  将AccountInput的Text属性设置为空字符串  -->
+                                                                        <behaviors:ChangePropertyAction
+                                                                            PropertyName="Text"
+                                                                            TargetName="AccountInput"
+                                                                            Value="" />
+                                                                    </behaviors:EventTrigger>
+                                                                </behaviors:Interaction.Triggers>
+                                                                <Button.Content>×</Button.Content>
+                                                            </Button>
+                                                        </Grid>
 
                                                     </Border>
 
@@ -547,11 +962,11 @@
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
+
                             <Button
-                                Name="RegisterButton"
                                 Height="40"
-                                Margin="0,30,0,30"
-                                Content="快捷登录"
+                                Margin="0,10,0,10"
+                                Content="登录"
                                 FontSize="15">
                                 <Button.Style>
                                     <Style TargetType="{x:Type Button}">
@@ -635,9 +1050,80 @@
                                     </Style>
                                 </Button.Style>
                             </Button>
+
+                            <!--
+                            这是原本的方案，但是 去注册 靠右是不行的
+                            这里有一个核心的概念：“布局测量的无穷大”。
+                            StackPanel: 像一条无限长的传送带。它问子控件：“你要多宽？”子控件说：“我要 100 像素。” StackPanel 就给它 100 像素，然后剩下的空间它不管。所以内部的 HorizontalAlignment="Right" 失去了参照物。
+                            Grid / DockPanel: 像一个固定大小的盒子。它们会告诉子控件：“我现在总共有 400 像素宽，你自己看着办。” 这时子控件设置 Right 才能生效。
+
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="30天免登录" />
+                                <DockPanel LastChildFill="False" HorizontalAlignment="Right">
+                                    <TextBlock>
+                                        <Run Text=" |" />
+                                        <Hyperlink Foreground="#D9DADB" TextDecorations="None">
+                                            <Run Text="忘记密码" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                    <TextBlock DockPanel.Dock="Right">
+                                        <Hyperlink Foreground="#D9DADB" TextDecorations="None">
+                                            <Run Text="去注册" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </DockPanel>
+                            </StackPanel>
+                            -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Content="30天免登录" />
+                                    <TextBlock>
+                                        <Run Text=" |" />
+                                        <Hyperlink Foreground="#D9DADB" TextDecorations="None">
+                                            <Run Text="忘记密码" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <StackPanel
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <TextBlock>
+                                        <Hyperlink Foreground="#D9DADB" TextDecorations="None">
+                                            <Run Text="去注册" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+
+                            <CheckBox Margin="0,10,0,0">
+                                <TextBlock Foreground="#D9DADB" TextWrapping="Wrap">
+                                    <Run Text="我已详细阅读并同意" />
+                                    <Hyperlink TextDecorations="None">
+                                        <Run Foreground="#147FF1" Text="《网易游戏隐私政策》" />
+                                    </Hyperlink>
+                                    <Run Text="和" />
+                                    <Hyperlink TextDecorations="None">
+                                        <Run Foreground="#147FF1" Text="《网易游戏使用许可及服务协议》" />
+                                    </Hyperlink>
+                                </TextBlock>
+                            </CheckBox>
+
+                            <CheckBox Margin="0,10,0,0">
+                                <TextBlock
+                                    Foreground="#D9DADB"
+                                    Text="我同意网易向网之易传输我的实名信息(姓名、身份证号)及手机号码等账号信息，用于登录、注册或绑定战网账号。"
+                                    TextWrapping="Wrap" />
+                            </CheckBox>
                         </StackPanel>
                     </TabItem>
-                    <TabItem Header="注册" />
 
                     <TabControl.Resources>
                         <!--  Control colors.  -->

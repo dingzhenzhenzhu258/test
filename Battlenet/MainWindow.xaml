@@ -337,9 +337,6 @@
                                     Foreground="#BFC0C2" />
                             </ListBox>
                         </StackPanel>
-
-
-
                     </Border>
                 </Popup>
             </DockPanel>
