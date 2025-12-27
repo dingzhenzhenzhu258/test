@@ -280,7 +280,6 @@
                         CornerRadius="3">
 
                         <StackPanel>
-
                             <GroupBox
                                 Margin="5,10,0,0"
                                 FontSize="11"
