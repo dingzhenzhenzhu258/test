@@ -110,6 +110,88 @@ namespace BattlenetResources.Controls
                 没有被编译进资源查找链：WPF 的自定义控件在被跨程序集调用时，其 DefaultStyleKey 只会顺着程序集的 Themes/Generic.xaml 这一条线去找。
                 无法自动加载：放在同级的 XAML 除非被显式合并（MergedDictionary），否则它只是一个孤立的资源字典文件，WPF 引擎不会在创建 EmailAutoCompleteTextBox 实例时主动去翻这个文件。
              */
+
+            /*
+            如果你有一个 VerificationCodeTextBoxStyle 且没有 C# 后台逻辑（即没有继承 TextBox 写一个新的类），那么情况就简单得多。
+                在这种情况下，你其实是在做一个 “皮肤包”，而不是一个“新物种”。
+                1. 这种情况下还需要 Generic.xaml 吗？
+                不需要。 只有当你写了 public class MyControl : TextBox 这种自定义类时，WPF 才会去 Generic.xaml 寻找。如果你只是单纯写 Style，你可以把这个样式放在任何地方：
+                App.xaml
+                随便一个 Dictionary.xaml
+                甚至当前窗口的 Window.Resources 里。 
+             */
+
+            /*
+             如果这个是拓展的特殊样式我也想给别人用呢？别人类似引用我的类库
+
+                如果你希望将这个特殊的样式（Skin/Theme）封装到类库（DLL）中分发给别人，即使它没有 C# 逻辑代码，处理方式也分为两种。这取决于你希望用户“显式调用”还是“无感使用”。
+
+                方案一：标准库模式（推荐）
+                如果你希望别人引用你的 DLL 后，通过一个简单的 Style 键名就能使用。
+
+                新建资源字典：在类库中创建一个文件，如 Themes/Styles.xaml。
+
+                编写样式：给你的样式起一个固定的 x:Key。
+
+                XML
+                <Style x:Key="VerificationCodeTextBoxStyle" TargetType="TextBox">
+                    </Style>
+                用户如何使用： 用户需要在他们的 App.xaml 中通过 Source 引入你的资源（注意这里的 component 路径写法）：
+
+                XML
+                <Application.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="pack://application:,,,/你的类库程序集名称;component/Themes/Styles.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </Application.Resources>
+                然后在界面上：<TextBox Style="{StaticResource VerificationCodeTextBoxStyle}" />。
+
+                方案二：伪装成自定义控件（用户体验最好）
+                如果你希望别人引用你的 DLL 后，直接写 <controls:VerificationTextBox /> 就能看到效果，而不必去查 Style 的名字。
+
+                哪怕你不需要重写 TextBox 的逻辑，你也可以创建一个空类：
+
+                C# 代码：
+
+                C#
+                public class VerificationTextBox : TextBox
+                {
+                    static VerificationTextBox()
+                    {
+                        // 这一步是关键：即使没逻辑，也告诉 WPF 去 Generic.xaml 找样式
+                        DefaultStyleKeyProperty.OverrideMetadata(typeof(VerificationTextBox), 
+                            new FrameworkPropertyMetadata(typeof(VerificationTextBox)));
+                    }
+                }
+                Generic.xaml 定义： 在这个文件里定义样式，但 TargetType 指向你的新类。
+
+                XML
+                <Style TargetType="{x:Type local:VerificationTextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Template">
+                        </Setter>
+                </Style>
+                为什么这样做更好？
+
+                语义化：别人看代码就知道这是个“验证码输入框”，而不是一个“套了样式的普通输入框”。
+
+                零配置：只要引入了命名空间，直接写标签就能用，不需要用户去 App.xaml 里合并资源字典。
+
+                3. 如果样式里用到了图片、字体等资源？
+                当你把样式给别人用时，资源路径很容易报错。
+
+                不要用相对路径：不要写 Source="../Images/icon.png"。
+
+                必须用绝对路径（Pack URI）：必须写成 Source="pack://application:,,,/你的类库名;component/Images/icon.png"。
+
+                资源属性：确保这些图片在你的类库项目中，“生成操作（Build Action）”设置为 Resource。
+
+                总结建议
+                如果你只是想提供一个可选的装饰，用方案一（提供 ResourceDictionary）。
+
+                如果你想把这个样式做成一个标准组件，用方案二（创建一个继承自 TextBox 的空类）。
+             */
             DefaultStyleKeyProperty.OverrideMetadata(typeof(EmailAutoCompleteTextBox),
                 new FrameworkPropertyMetadata(typeof(EmailAutoCompleteTextBox)));
         }

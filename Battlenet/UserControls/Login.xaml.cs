@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BattlenetResources.Controls
+namespace Battlenet.UserControls
 {
     /// <summary>
     /// Login.xaml 的交互逻辑

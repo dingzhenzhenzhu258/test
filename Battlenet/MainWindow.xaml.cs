@@ -1,4 +1,5 @@
-﻿using BattlenetResources.Controls;
+﻿using Battlenet.UserControls;
+using BattlenetResources.Controls;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;

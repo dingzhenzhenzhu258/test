@@ -1,70 +1,13 @@
 ﻿<UserControl
-    x:Class="BattlenetResources.Controls.Register"
+    x:Class="Battlenet.UserControls.Register"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:BattlenetResources.Controls"
+    xmlns:local="clr-namespace:Battlenet.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <UserControl.Resources>
-
-        <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <StackPanel Orientation="Horizontal">
-                            <Border
-                                x:Name="border"
-                                Width="20"
-                                Height="20"
-                                VerticalAlignment="Center"
-                                Background="Transparent"
-                                BorderBrush="White"
-                                BorderThickness="0.5"
-                                CornerRadius="3">
-                                <Path
-                                    x:Name="checkMark"
-                                    Margin="2"
-                                    Data="M2,8 L6,12 L14,4"
-                                    Stretch="Uniform"
-                                    Stroke="White"
-                                    StrokeThickness="2"
-                                    Visibility="Collapsed" />
-                            </Border>
-                            <ContentControl HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </StackPanel>
-
-                        <!--  不能直接给 Border 设置内容属性为“勾”，因为 Border 是一个装饰控件，它的 Child 属性（即内容）只能在初始化时设置一次，不能通过触发器（Trigger）动态替换整个控件  -->
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00AEFF" />
-                                <Setter TargetName="border" Property="BorderBrush" Value="#00AEFF" />
-                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible" />
-                            </Trigger>
-
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#00AEFF" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="BlizzardLinkStyle" TargetType="Hyperlink">
-            <Setter Property="Foreground" Value="#148EFF" />
-            <Setter Property="TextDecorations" Value="None" />
-
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="#00CCFF" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
-
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock
             FontSize="33"
@@ -103,7 +46,8 @@
             <CheckBox
                 x:Name="AgreeCheckBox"
                 Margin="10,3,10,0"
-                VerticalAlignment="Top" />
+                VerticalAlignment="Top"
+                Style="{StaticResource CheckBoxStyle1}" />
             <TextBlock
                 Width="250"
                 FontSize="13"
@@ -113,17 +57,11 @@
                 LineStackingStrategy="BlockLineHeight"
                 TextWrapping="Wrap">
                 <Run Text="您同意" />
-                <Hyperlink
-                    Click="Hyperlink_Click"
-                    Style="{StaticResource BlizzardLinkStyle}"
-                    TextDecorations="None">
+                <Hyperlink Click="Hyperlink_Click" TextDecorations="None">
                     <Run Text="暴雪战网最终用户许可协议" />
                 </Hyperlink>
                 <Run Text="和" />
-                <Hyperlink
-                    Click="Hyperlink_Click"
-                    Style="{StaticResource BlizzardLinkStyle}"
-                    TextDecorations="None">
+                <Hyperlink Click="Hyperlink_Click" TextDecorations="None">
                     <Run Text="网易暴雪游戏服务隐私政策" />
                 </Hyperlink>
                 <LineBreak />
@@ -194,10 +132,7 @@
                 Foreground="#D9DADB"
                 Text="关联您的账号" />
             <Run Text="以继续" />
-            <Hyperlink
-                Click="Hyperlink_Click"
-                Style="{StaticResource BlizzardLinkStyle}"
-                TextDecorations="None">
+            <Hyperlink Click="Hyperlink_Click" TextDecorations="None">
                 <Run
                     FontSize="17"
                     FontWeight="Black"

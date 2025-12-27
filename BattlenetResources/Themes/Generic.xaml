@@ -1,0 +1,17 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:BattlenetResources.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/EmailTextBoxStyle.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/VerificationCodeTextBoxStyle.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/ButtonBase.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/CheckBoxBase.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/ComboxBase.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/GroupBoxBase.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/ListBoxBase.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/TabControlBase.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/PhoneNumberTextBoxStyle.xaml" />
+        <ResourceDictionary Source="/BattlenetResources;component/Controls/HyperlinkBase.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
