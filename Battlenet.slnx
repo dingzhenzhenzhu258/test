@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Battlenet/Battlenet.csproj" />
   <Project Path="BattlenetResources/BattlenetResources.csproj" Id="2f5d39ae-bfed-4b2c-9b82-fe0b1d32fcd7" />
+  <Project Path="导航demo/导航demo.csproj" Id="135335a8-7a94-4437-8d1f-1e786cda8fac" />
 </Solution>
